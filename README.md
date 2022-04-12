@@ -14,3 +14,8 @@
 
 Так выглядит отрывок основого геймплея:
 
+![movie_002](https://user-images.githubusercontent.com/101981875/162936766-8318e110-c0b4-42f9-9a9e-3cc07dec986b.gif)
+
+
+
+В игру можно поиграть скачав билд под названием MeteorBuild.rar
