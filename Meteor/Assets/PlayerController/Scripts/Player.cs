@@ -1,11 +1,13 @@
 using System;
+using CollisionSystem;
+using CollisionSystem.Scripts;
 using GameSystem;
 using UnityEngine;
 using InputSystem;
 
 namespace PlayerController
 {
-    [RequireComponent(typeof(SurfaceSlider), typeof(Rigidbody), typeof(PlayerCollision))]
+    [RequireComponent(typeof(SurfaceSlider), typeof(Rigidbody), typeof(PlayerCollisionHandler))]
     public class Player : MonoBehaviour, IPauseHandler
     {
         public event Action Died; 
@@ -17,7 +19,7 @@ namespace PlayerController
         private Rigidbody _rigidbody;
         private IInput _input;
         private float _rotationInputValue;
-        private PlayerCollision _playerCollision;
+        private PlayerCollisionHandler _playerCollision;
 
         private bool _isPaused { get; set; }
         
@@ -25,7 +27,7 @@ namespace PlayerController
         {
             _rigidbody = GetComponent<Rigidbody>();
             _surfaceSlider = GetComponent<SurfaceSlider>();
-            _playerCollision = GetComponent<PlayerCollision>();
+            _playerCollision = GetComponent<PlayerCollisionHandler>();
         }
 
         private void OnEnable()

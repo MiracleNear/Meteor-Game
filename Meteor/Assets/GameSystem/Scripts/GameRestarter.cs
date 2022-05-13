@@ -10,9 +10,7 @@ namespace GameSystem
         
         [SerializeField] private Button _sceneRestart;
         [SerializeField] private Button _exitToMenu;
-        [SerializeField] private string _sceneToRestart;
-        [SerializeField] private string _menuScene;
-        
+
         private void OnEnable()
         {
             _sceneRestart.onClick.AddListener(ReloadLevel);
@@ -29,12 +27,12 @@ namespace GameSystem
         {
             LevelRestarted?.Invoke();
 
-            ProjectContext.Instance.SceneLoader.LoadAsyncScene(_sceneToRestart);
+            ProjectContext.Instance.SceneLoader.LoadAsyncScene(SceneID.MainScene);
         }
 
         private void ExitMenu()
         {
-            ProjectContext.Instance.SceneLoader.LoadAsyncScene(_menuScene);
+            ProjectContext.Instance.SceneLoader.LoadAsyncScene(SceneID.Menu);
         }
     }
 }

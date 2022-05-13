@@ -7,28 +7,14 @@ namespace GameSystem
 {
     public class SceneLoader : MonoBehaviour
     {
-        public event Action DownloadStarted;
-        public event Action<float> DownloadProcess;
-        public event Action DownloadEnded;
-        
-        public void LoadAsyncScene(string scene)
+        public void LoadAsyncScene(SceneID indexScene)
         {
-            StartCoroutine(Loading(scene));
+            StartCoroutine(Loading((int)indexScene));
         }
 
-        private IEnumerator Loading(string name)
+        private IEnumerator Loading(int indexScene)
         {
-            AsyncOperation sceneLoader = SceneManager.LoadSceneAsync(name, LoadSceneMode.Single);
-            
-            DownloadStarted?.Invoke();
-
-            while (!sceneLoader.isDone)
-            {
-                DownloadProcess?.Invoke(sceneLoader.progress);
-                yield return null;
-            }
-            
-            DownloadEnded?.Invoke();
+            yield return SceneManager.LoadSceneAsync(indexScene, LoadSceneMode.Single);
         }
     }
 }

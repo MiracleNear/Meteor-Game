@@ -12,7 +12,6 @@ namespace GameObstacles
         
         private MeshFilter _meshFilter;
         private MeshRenderer _meshRenderer;
-        private float _playbackPositionInSecondsBeforePause;
 
         private void Awake()
         {
@@ -27,6 +26,7 @@ namespace GameObstacles
             _meshFilter.mesh = skin.Model;
             _meshRenderer.material = skin.Visual;
         }
+        
         
         public void SetPaused(bool isPaused)
         {

@@ -1,13 +1,16 @@
 using System;
+using CollisionSystem.Scripts;
 using GameObstacles;
-using GameObstacles.MeteorObstacle;
 using UnityEngine;
 
+[RequireComponent(typeof(PlanetCollisionHandler))]
 public class Planet : MonoBehaviour
 {
-    public event Action<CrashPlace> MeteorFalled; 
-    
+    public event Action<CrashPlace> MeteorFalled;
+
     [SerializeField] private float _radius;
+
+    private PlanetCollisionHandler _planetCollisionHandler;
     public float Radius => _radius;
 
     private void OnValidate()
@@ -20,19 +23,24 @@ public class Planet : MonoBehaviour
         transform.localScale = Vector3.one * _radius * 2f;
     }
 
-
-    private void OnCollisionEnter(Collision other)
+    private void Awake()
     {
-        if (other.gameObject.TryGetComponent(out Meteor meteor))
-        {
-            ContactPoint contactPoint = other.contacts[0];
+        _planetCollisionHandler = GetComponent<PlanetCollisionHandler>();
+    }
 
-            Vector3 lookDirection = Vector3.Cross(contactPoint.normal, transform.right);
-                
-            CrashPlace crashPlace = new CrashPlace(contactPoint.normal, lookDirection, meteor.transform.right, contactPoint.point);
-            
-            MeteorFalled?.Invoke(crashPlace);
-        }
+    private void OnEnable()
+    {
+        _planetCollisionHandler.CraterFormed += OnCraterFormed;
+    }
+
+    private void OnDisable()
+    {
+        _planetCollisionHandler.CraterFormed -= OnCraterFormed;
+    }
+
+    private void OnCraterFormed(CrashPlace crashPlace)
+    {
+        MeteorFalled?.Invoke(crashPlace);
     }
 }
 

@@ -1,5 +1,3 @@
-using System;
-using GameSystem;
 using UnityEngine;
 
 namespace PlayerController

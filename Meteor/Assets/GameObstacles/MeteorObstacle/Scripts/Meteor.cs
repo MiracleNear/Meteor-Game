@@ -1,20 +1,33 @@
 using System;
-using Unity.Mathematics;
+using CollisionSystem.Scripts;
 using UnityEngine;
 
 namespace GameObstacles.MeteorObstacle
 {
+    [RequireComponent(typeof(MeteorCollisionHandler), typeof(SphereCollider))]
     public class Meteor : Obstacle
     {
         public override event Action<GameObject> Destroying;
         
         [SerializeField] private ParticleSystem _destroyEffect;
-        
+
         private Planet _lookTarget;
+        private MeteorCollisionHandler _meteorCollision;
 
         private void Awake()
         {
             _lookTarget = FindObjectOfType<Planet>();
+            _meteorCollision = GetComponent<MeteorCollisionHandler>();
+        }
+
+        private void OnEnable()
+        {
+            _meteorCollision.Collided += OnCollided;
+        }
+
+        private void OnDisable()
+        {
+            _meteorCollision.Collided -= OnCollided;
         }
 
         private void Start()
@@ -26,11 +39,11 @@ namespace GameObstacles.MeteorObstacle
             transform.rotation = rotation;
         }
 
-        private void OnCollisionEnter(Collision other)
+        private void OnCollided()
         {
-            Quaternion rotation = quaternion.LookRotation(Vector3.forward, -transform.forward);
-
-            Instantiate(_destroyEffect, transform.position, rotation);
+            _destroyEffect.transform.parent = null;
+            _destroyEffect.gameObject.SetActive(true);
+            _destroyEffect.Play();
             
             Destroying?.Invoke(gameObject);
         }

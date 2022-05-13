@@ -1,10 +1,11 @@
 ﻿using System;
-using GameObstacles.MeteorObstacle;
+using CollisionSystem.Scripts;
 using GameSystem;
 using UnityEngine;
 
 namespace GameObstacles.CraterObstacle
 {
+    [RequireComponent(typeof(CraterCollisionHandler))]
     public class Crater : Obstacle, IPauseHandler
     {
         public override event Action<GameObject> Destroying;
@@ -14,13 +15,29 @@ namespace GameObstacles.CraterObstacle
 
         private Vector3 _startScale;
         private float _destructionStartTimeLife;
-
-        private bool _isPaused;
+        private CraterCollisionHandler _craterCollision;
         
+        private bool _isPaused;
+
+        private void Awake()
+        {
+            _craterCollision = GetComponent<CraterCollisionHandler>();
+        }
+
+        private void OnEnable()
+        {
+            _craterCollision.EncounteredWithMeteor += OnEncounteredWithMeteor;
+        }
+
         private void Start()
         {
             _startScale = transform.localScale;
             _destructionStartTimeLife = Time.time;
+        }
+
+        private void OnDisable()
+        {
+            _craterCollision.EncounteredWithMeteor -= OnEncounteredWithMeteor;
         }
 
         private void Update()
@@ -40,12 +57,9 @@ namespace GameObstacles.CraterObstacle
             }
         }
 
-        private void OnCollisionEnter(Collision other)
+        private void OnEncounteredWithMeteor()
         {
-            if (other.gameObject.TryGetComponent(out Meteor meteor))
-            {
-                _destructionStartTimeLife = Time.time;
-            }
+            _destructionStartTimeLife = Time.time;
         }
 
         public void SetPaused(bool isPaused)
