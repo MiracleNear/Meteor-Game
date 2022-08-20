@@ -21,4 +21,4 @@
 
 
 # Ссылка на itch.io, чтобы поиграть в игру
-
+https://alwaysnearby.itch.io/meteor
